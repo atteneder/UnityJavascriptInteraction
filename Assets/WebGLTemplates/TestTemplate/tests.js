@@ -1,14 +1,50 @@
+Module.onRuntimeInitialized = function() {
+	c_v = Module.cwrap('call_cb_v',null,[]);
+	c_vi = Module.cwrap('call_cb_vi',null,['number']);
+	c_vf = Module.cwrap('call_cb_vf',null,['number']);
+	c_vs = Module.cwrap('call_cb_vs',null,['string']);
+	c_i = Module.cwrap('call_cb_i','number',[]);
+	c_f = Module.cwrap('call_cb_f','number',[]);
+	c_s = Module.cwrap('call_cb_s','string',[]);
+};
+
+var iterations = 1000;
+
 function run_tests() {
+	console.log('Running tests via original SendMessage');
+	run_tests_sendmessage();
 
-	var iterations = 1000;
+	optimize_sendmessage();
+	console.log('Running tests via cwrap optimized SendMessage');
+	run_tests_sendmessage();
 
-	var c_v = Module.cwrap('call_cb_v',null,[]);
-	var c_vi = Module.cwrap('call_cb_vi',null,['number']);
-	var c_vf = Module.cwrap('call_cb_vf',null,['number']);
-	var c_vs = Module.cwrap('call_cb_vs',null,['string']);
-	var c_i = Module.cwrap('call_cb_i','number',[]);
-	var c_f = Module.cwrap('call_cb_f','number',[]);
-	var c_s = Module.cwrap('call_cb_s','string',[]);
+	console.log('Running tests via direct invocations. Note: oposed to SendMessage, these calls are plain invocations of static methods. SendMessage on the other hand makes a name (string) based lookup of a dynamic GameObjects beforehands and thus is slower.');
+	run_tests_direct();
+
+	console.log('Running additional tests via direct invocations. These calls arent\'t directly doable with SendMessage');
+	run_tests_direct_additional();
+}
+
+function optimize_sendmessage() {
+	SendMessage = function(gameObject, func, param) {
+		if (param === undefined) {
+			if (typeof this.SendMessage_vss != 'function')
+				this.SendMessage_vss = Module.cwrap('SendMessage', 'void', ['string', 'string']);
+			this.SendMessage_vss(gameObject, func);
+		} else if (typeof param === "string") {
+			if (typeof this.SendMessage_vsss != 'function')
+				this.SendMessage_vsss = Module.cwrap('SendMessageString', 'void', ['string', 'string', 'string']);
+			this.SendMessage_vsss(gameObject, func, param);
+		} else if (typeof param === "number") {
+			if (typeof this.SendMessage_vssn != 'function')
+				this.SendMessage_vssn = Module.cwrap('SendMessageFloat', 'void', ['string', 'string', 'number']);
+			this.SendMessage_vssn(gameObject, func, param);
+		} else
+			throw "" + param + " is does not have a type which is supported by SendMessage.";
+	}
+}
+
+function run_tests_sendmessage() {
 
 	//----------------------
 
@@ -18,12 +54,6 @@ function run_tests() {
 	}
 	console.timeEnd('SMv');
 
-	console.time('Cv');
-	for(i=0;i<iterations;i++) {
-		c_v();
-	}
-	console.timeEnd('Cv');
-
 	//----------------------
 
 	console.time('SMvi');
@@ -31,12 +61,6 @@ function run_tests() {
 		SendMessage('Receiver','TargetViWrapper',42);
 	}
 	console.timeEnd('SMvi');
-
-	console.time('Cvi');
-	for(i=0;i<iterations;i++) {
-		c_vi(42);
-	}
-	console.timeEnd('Cvi');
 	
 	//----------------------
 	
@@ -45,12 +69,6 @@ function run_tests() {
 		SendMessage('Receiver','TargetVfWrapper',42.42);
 	}
 	console.timeEnd('SMvf');
-
-	console.time('Cvf');
-	for(i=0;i<iterations;i++) {
-		c_vf(42.42);
-	}
-	console.timeEnd('Cvf');
 	
 	//----------------------
 	
@@ -59,22 +77,45 @@ function run_tests() {
 		SendMessage('Receiver','TargetVsWrapper','This is a test string.');
 	}
 	console.timeEnd('SMvs');
+}
+
+function run_tests_direct() {
+	
+	//----------------------
+
+	console.time('Cv');
+	for(i=0;i<iterations;i++) {
+		c_v();
+	}
+	console.timeEnd('Cv');
+
+	//----------------------
+
+	console.time('Cvi');
+	for(i=0;i<iterations;i++) {
+		c_vi(42);
+	}
+	console.timeEnd('Cvi');
+	
+	//----------------------
+
+	console.time('Cvf');
+	for(i=0;i<iterations;i++) {
+		c_vf(42.42);
+	}
+	console.timeEnd('Cvf');
+	
+	//----------------------
 
 	console.time('Cvs');
 	for(i=0;i<iterations;i++) {
 		c_vs('This is a test string.');
 	}
 	console.timeEnd('Cvs');
+}
 
-	//----------------------
-
-	// Doesn't make much sense to compare the no-value-returning SendMessage to cwrap
-	// console.time('SMi');
-	// for(i=0;i<iterations;i++) {
-	// 	SendMessage('Receiver','TargetiWrapper');
-	// }
-	// console.timeEnd('SMi');
-
+function run_tests_direct_additional() {
+	
 	console.time('Ci');
 	for(i=0;i<iterations;i++) {
 		var ri=c_i();
@@ -83,13 +124,6 @@ function run_tests() {
 	console.timeEnd('Ci');
 
 	//----------------------
-
-	// Doesn't make much sense to compare the no-value-returning SendMessage to cwrap
-	// console.time('SMf');
-	// for(i=0;i<iterations;i++) {
-	// 	SendMessage('Receiver','TargetfWrapper');
-	// }
-	// console.timeEnd('SMf');
 
 	console.time('Cf');
 	for(i=0;i<iterations;i++) {
@@ -100,19 +134,10 @@ function run_tests() {
 
 	//----------------------
 
-	// Doesn't make much sense to compare the no-value-returning SendMessage to cwrap
-	// console.time('SMs');
-	// for(i=0;i<iterations;i++) {
-	// 	SendMessage('Receiver','TargetsWrapper');
-	// }
-	// console.timeEnd('SMs');
-
 	console.time('Cs');
 	for(i=0;i<iterations;i++) {
 		var s=c_s();
 		// console.log(s);
 	}
 	console.timeEnd('Cs');
-
-	//----------------------
 }

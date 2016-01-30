@@ -1,19 +1,14 @@
+// #define EMSCRIPTEN_KEEPALIVE
+
 #include <stdint.h>
 #include "emscripten.h"
-
-typedef void (*callback_v)();
-typedef void (*callback_vi)(int32_t a);
-typedef void (*callback_vf)(float a);
-typedef void (*callback_vs)(const char *a);
-
-typedef int32_t (*callback_I)();
-typedef float (*callback_F)();
-typedef const char * (*callback_S)();
+#include "native.h"
 
 callback_v cb_v;
 callback_vi cb_vi;
 callback_vf cb_vf;
 callback_vs cb_vs;
+callback_vv3 cb_vv3;
 
 callback_I cb_i;
 callback_F cb_f;
@@ -24,6 +19,7 @@ void set_callbacks(
 	callback_vi p_vi,
 	callback_vf p_vf,
 	callback_vs p_vs,
+	callback_vv3 p_vv3,
 	callback_I p_i,
 	callback_F p_f,
 	callback_S p_s
@@ -33,6 +29,7 @@ void set_callbacks(
 	cb_vi = p_vi;
 	cb_vf = p_vf;
 	cb_vs = p_vs;
+	cb_vv3 = p_vv3;
 	cb_i = p_i;
 	cb_f = p_f;
 	cb_s = p_s;
@@ -52,6 +49,10 @@ void EMSCRIPTEN_KEEPALIVE call_cb_vf(float a) {
 
 void EMSCRIPTEN_KEEPALIVE call_cb_vs(const char *a) {
 	cb_vs(a);
+}
+
+void EMSCRIPTEN_KEEPALIVE call_cb_vv3(struct Vector3 a) {
+	cb_vv3(a);
 }
 
 int32_t EMSCRIPTEN_KEEPALIVE call_cb_i() {

@@ -3,6 +3,7 @@ Module.onRuntimeInitialized = function() {
 	c_vi = Module.cwrap('call_cb_vi',null,['number']);
 	c_vf = Module.cwrap('call_cb_vf',null,['number']);
 	c_vs = Module.cwrap('call_cb_vs',null,['string']);
+	c_vv3 = Module.cwrap('call_cb_vv3',null,['number']);
 	c_i = Module.cwrap('call_cb_i','number',[]);
 	c_f = Module.cwrap('call_cb_f','number',[]);
 	c_s = Module.cwrap('call_cb_s','string',[]);
@@ -140,4 +141,15 @@ function run_tests_direct_additional() {
 		// console.log(s);
 	}
 	console.timeEnd('Cs');
+
+	console.time('Cvv3');
+	var dataPtr = Module._malloc(12);
+	Module.setValue(dataPtr,1,'float');
+	Module.setValue(dataPtr+4,2,'float');
+	Module.setValue(dataPtr+8,3,'float');
+	for(i=0;i<iterations;i++) {
+		c_vv3(dataPtr);
+	}
+	Module._free(dataPtr);
+	console.timeEnd('Cvv3');
 }

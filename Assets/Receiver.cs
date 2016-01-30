@@ -10,6 +10,7 @@ public class Receiver : MonoBehaviour {
 	delegate void delegate_Vi(int i);
 	delegate void delegate_Vf(float f);
 	delegate void delegate_Vs(string s);
+	delegate void delegate_Vv3(Vector3 a);
 
 	delegate int delegate_I();
 	delegate float delegate_F();
@@ -22,6 +23,7 @@ public class Receiver : MonoBehaviour {
 			TargetVi,
 			TargetVf,
 			TargetVs,
+			TargetVv3,
 			TargetI,
 			TargetF,
 			TargetS
@@ -43,18 +45,6 @@ public class Receiver : MonoBehaviour {
 
 	private void TargetVsWrapper(string a) {
 		TargetVs (a);
-	}
-
-	private void TargetiWrapper() {
-		TargetI ();
-	}
-
-	private void TargetfWrapper() {
-		TargetF ();
-	}
-
-	private void TargetsWrapper() {
-		TargetS ();
 	}
 #endregion
 
@@ -86,6 +76,13 @@ public class Receiver : MonoBehaviour {
 		#endif
 	}
 
+	[MonoPInvokeCallback (typeof (delegate_Vv3))]
+	private static void TargetVv3(Vector3 a) {
+		#if VERBOSE
+		Debug.Log (string.Format("Vv3: {0}",a));
+		#endif
+	}
+
 	[MonoPInvokeCallback (typeof (delegate_I))]
 	private static int TargetI() {
 		return 42;
@@ -107,6 +104,7 @@ public class Receiver : MonoBehaviour {
 		delegate_Vi vi,
 		delegate_Vf vf,
 		delegate_Vs vs,
+		delegate_Vv3 vv3,
 		delegate_I i,
 		delegate_F f,
 		delegate_S s

@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "emscripten.h"
 
 typedef void (*callback_v)();
 typedef void (*callback_vi)(int32_t a);
@@ -37,30 +38,30 @@ void set_callbacks(
 	cb_s = p_s;
 }
 
-void call_cb_v() {
+void EMSCRIPTEN_KEEPALIVE call_cb_v() {
 	cb_v();
 }
 
-void call_cb_vi(int32_t a) {
+void EMSCRIPTEN_KEEPALIVE call_cb_vi(int32_t a) {
 	cb_vi(a);
 }
 
-void call_cb_vf(float a) {
+void EMSCRIPTEN_KEEPALIVE call_cb_vf(float a) {
 	cb_vf(a);
 }
 
-void call_cb_vs(const char *a) {
+void EMSCRIPTEN_KEEPALIVE call_cb_vs(const char *a) {
 	cb_vs(a);
 }
 
-int32_t call_cb_i() {
+int32_t EMSCRIPTEN_KEEPALIVE call_cb_i() {
 	return cb_i();
 }
 
-float call_cb_f() {
+float EMSCRIPTEN_KEEPALIVE call_cb_f() {
 	return cb_f();
 }
 
-const char * call_cb_s() {
+const char * EMSCRIPTEN_KEEPALIVE call_cb_s() {
 	return cb_s();
 }

@@ -1,4 +1,4 @@
-﻿#define VERBOSE
+﻿// #define VERBOSE
 
 using UnityEngine;
 using System.Collections;

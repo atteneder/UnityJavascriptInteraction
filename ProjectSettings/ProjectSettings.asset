@@ -13,12 +13,12 @@ PlayerSettings:
   productName: JavascriptInteraction
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
-  m_ShowUnitySplashScreen: 1
+  m_ShowUnitySplashScreen: 0
   m_VirtualRealitySplashScreen: {fileID: 0}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
-  defaultScreenWidthWeb: 960
-  defaultScreenHeightWeb: 600
+  defaultScreenWidthWeb: 320
+  defaultScreenHeightWeb: 200
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   m_ActiveColorSpace: 0
@@ -169,8 +169,17 @@ PlayerSettings:
     banner: {fileID: 0}
   androidGamepadSupportLevel: 0
   resolutionDialogBanner: {fileID: 0}
-  m_BuildTargetIcons: []
-  m_BuildTargetBatching: []
+  m_BuildTargetIcons:
+  - m_BuildTarget: 
+    m_Icons:
+    - serializedVersion: 2
+      m_Icon: {fileID: 0}
+      m_Width: 128
+      m_Height: 128
+  m_BuildTargetBatching:
+  - m_BuildTarget: WebGL
+    m_StaticBatching: 0
+    m_DynamicBatching: 0
   m_BuildTargetGraphicsAPIs: []
   webPlayerTemplate: APPLICATION:Default
   m_TemplateCustomTags: {}
@@ -424,8 +433,8 @@ PlayerSettings:
   Standalone::ScriptingBackend: 0
   WebGL::ScriptingBackend: 1
   WebGL::audioCompressionFormat: 4
-  WebGL::exceptionSupport: 1
-  WebGL::memorySize: 256
+  WebGL::exceptionSupport: 0
+  WebGL::memorySize: 32
   WebPlayer::ScriptingBackend: 0
   iOS::Architecture: 2
   iOS::EnableIncrementalBuildSupportForIl2cpp: 1
@@ -444,7 +453,7 @@ PlayerSettings:
   - WebGL::template
   - additionalIl2CppArgs::additionalIl2CppArgs
   WebGL::emscriptenArgs: -s EXPORTED_FUNCTIONS="['_main','_SendMessageInt','_SendMessageFloat','_SendMessageString','_SendMessage','_SetFullscreen','_call_cb_v','_call_cb_vi','_call_cb_vf','_call_cb_vs',]"
-  WebGL::template: APPLICATION:Default
+  WebGL::template: PROJECT:TestTemplate
   additionalIl2CppArgs::additionalIl2CppArgs: 
   cloudProjectId: 
   projectName: 

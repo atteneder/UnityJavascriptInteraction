@@ -6,7 +6,7 @@ public class EditorHelper : MonoBehaviour {
 
 	[MenuItem("Build/Set emcc arguments")]
 	static void SetEmcc () {
-		PlayerSettings.SetPropertyString("emscriptenArgs", "-s EXPORTED_FUNCTIONS=\"['_main','_SendMessageInt','_SendMessageFloat','_SendMessageString','_SendMessage','_SetFullscreen','_call_cb_v','_call_cb_vi','_call_cb_vf','_call_cb_vs',]\"", BuildTargetGroup.WebGL);
+		PlayerSettings.SetPropertyString("emscriptenArgs", "-s EXPORTED_FUNCTIONS=\"['_main','_SendMessageInt','_SendMessageFloat','_SendMessageString','_SendMessage','_SetFullscreen','_call_cb_v','_call_cb_vi','_call_cb_vf','_call_cb_vs','_call_cb_i','_call_cb_f','_call_cb_s',]\"", BuildTargetGroup.WebGL);
 	}
 
 	[MenuItem("Build/unset emcc arguments")]

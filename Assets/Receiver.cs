@@ -11,13 +11,20 @@ public class Receiver : MonoBehaviour {
 	delegate void delegate_Vf(float f);
 	delegate void delegate_Vs(string s);
 
+	delegate int delegate_I();
+	delegate float delegate_F();
+	delegate string delegate_S();
+
 	// Use this for initialization
 	void Awake () {
 		set_callbacks (
 			TargetV,
 			TargetVi,
 			TargetVf,
-			TargetVs
+			TargetVs,
+			TargetI,
+			TargetF,
+			TargetS
 		);
 	}
 
@@ -36,6 +43,18 @@ public class Receiver : MonoBehaviour {
 
 	private void TargetVsWrapper(string a) {
 		TargetVs (a);
+	}
+
+	private void TargetiWrapper() {
+		TargetI ();
+	}
+
+	private void TargetfWrapper() {
+		TargetF ();
+	}
+
+	private void TargetsWrapper() {
+		TargetS ();
 	}
 #endregion
 
@@ -67,11 +86,29 @@ public class Receiver : MonoBehaviour {
 		#endif
 	}
 
+	[MonoPInvokeCallback (typeof (delegate_I))]
+	private static int TargetI() {
+		return 42;
+	}
+
+	[MonoPInvokeCallback (typeof (delegate_F))]
+	private static float TargetF() {
+		return 42.42f;
+	}
+
+	[MonoPInvokeCallback (typeof (delegate_S))]
+	private static string TargetS() {
+		return "This is a return string.";
+	}
+
 	[DllImport("__Internal")]
 	private static extern void set_callbacks(
 		delegate_V v,
 		delegate_Vi vi,
 		delegate_Vf vf,
-		delegate_Vs vs
+		delegate_Vs vs,
+		delegate_I i,
+		delegate_F f,
+		delegate_S s
 	);
 }

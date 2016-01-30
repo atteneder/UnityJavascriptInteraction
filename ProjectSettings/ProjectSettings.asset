@@ -452,7 +452,7 @@ PlayerSettings:
   - WebGL::emscriptenArgs
   - WebGL::template
   - additionalIl2CppArgs::additionalIl2CppArgs
-  WebGL::emscriptenArgs: -s EXPORTED_FUNCTIONS="['_main','_SendMessageInt','_SendMessageFloat','_SendMessageString','_SendMessage','_SetFullscreen','_call_cb_v','_call_cb_vi','_call_cb_vf','_call_cb_vs',]"
+  WebGL::emscriptenArgs: -s EXPORTED_FUNCTIONS="['_main','_SendMessageInt','_SendMessageFloat','_SendMessageString','_SendMessage','_SetFullscreen','_call_cb_v','_call_cb_vi','_call_cb_vf','_call_cb_vs','_call_cb_i','_call_cb_f','_call_cb_s',]"
   WebGL::template: PROJECT:TestTemplate
   additionalIl2CppArgs::additionalIl2CppArgs: 
   cloudProjectId: 

@@ -5,12 +5,27 @@ Module.onRuntimeInitialized = function() {
 	c_vs = Module.cwrap('call_cb_vs',null,['string']);
 	c_vv3 = Module.cwrap('call_cb_vv3',null,['number']);
 	c_vv3json = Module.cwrap('call_cb_vv3json',null,['string']);
+	c_vx = Module.cwrap('call_cb_vx',null,['number','number','number','number']);
+	c_vxjson = Module.cwrap('call_cb_vxjson',null,['string']);
 	c_i = Module.cwrap('call_cb_i','number',[]);
 	c_f = Module.cwrap('call_cb_f','number',[]);
 	c_s = Module.cwrap('call_cb_s','string',[]);
 };
 
 var iterations = 1000;
+
+var int1 = 100;
+var int2 = 200;
+var vector3 = {
+		x:1,
+		y:2,
+		z:3
+	}
+var vector3_2 = {
+		x:1,
+		y:2,
+		z:3
+	}
 
 function run_tests() {
 	console.log('Running tests via original SendMessage');
@@ -79,6 +94,30 @@ function run_tests_sendmessage() {
 		SendMessage('Receiver','TargetVsWrapper','This is a test string.');
 	}
 	console.timeEnd('SMvs');
+
+	//----------------------
+
+	console.time('SMvv3');
+	for(i=0;i<iterations;i++) {
+		var argument = JSON.stringify(vector3);
+		SendMessage('Receiver','TargetVsWrapper',argument);
+	}
+	console.timeEnd('SMvv3');
+
+	//----------------------
+
+	console.time('SMvx');
+	for(i=0;i<iterations;i++) {
+		var argument = {
+			a:int1,
+			b:int2,
+			c:vector3,
+			d:vector3_2
+		}
+		argument = JSON.stringify(argument);
+		SendMessage('Receiver','TargetVsWrapper',argument);
+	}
+	console.timeEnd('SMvx');
 }
 
 function run_tests_direct() {
@@ -114,6 +153,61 @@ function run_tests_direct() {
 		c_vs('This is a test string.');
 	}
 	console.timeEnd('Cvs');
+
+	//----------------------
+
+	console.time('Cvv3 JSON');
+	for(i=0;i<iterations;i++) {
+		var argument = JSON.stringify(vector3);
+		c_vv3json(argument);
+	}
+	console.timeEnd('Cvv3 JSON');
+
+	console.time('Cvv3');
+	
+	for(i=0;i<iterations;i++) {
+		var dataPtr = Module._malloc(12);
+		Module.setValue(dataPtr,vector3.x,'float');
+		Module.setValue(dataPtr+4,vector3.y,'float');
+		Module.setValue(dataPtr+8,vector3.z,'float');
+		c_vv3(dataPtr);
+		Module._free(dataPtr);
+	}
+	console.timeEnd('Cvv3');
+
+	//----------------------
+
+	console.time('Cvx JSON');
+	for(i=0;i<iterations;i++) {
+		var argument = {
+			a:int1,
+			b:int2,
+			c:vector3,
+			d:vector3_2
+		}
+		argument = JSON.stringify(argument);
+		c_vxjson(argument);
+	}
+	console.timeEnd('Cvx JSON');
+
+	console.time('Cvx');
+	for(i=0;i<iterations;i++) {
+		var dataPtr = Module._malloc(24);
+		Module.setValue(dataPtr,vector3.x,'float');
+		Module.setValue(dataPtr+4,vector3.y,'float');
+		Module.setValue(dataPtr+8,vector3.z,'float');
+		
+		Module.setValue(dataPtr+12,vector3_2.x,'float');
+		Module.setValue(dataPtr+16,vector3_2.y,'float');
+		Module.setValue(dataPtr+20,vector3_2.z,'float');
+
+		c_vx(int1,int2,dataPtr,dataPtr+12);
+
+		Module._free(dataPtr);
+	}
+	console.timeEnd('Cvx');
+
+	//----------------------
 }
 
 function run_tests_direct_additional() {
@@ -142,29 +236,4 @@ function run_tests_direct_additional() {
 		// console.log(s);
 	}
 	console.timeEnd('Cs');
-
-	var vector3 = {
-		x:1,
-		y:2,
-		z:3
-	}
-
-	console.time('Cvv3 JSON');
-	for(i=0;i<iterations;i++) {
-		var argument = JSON.stringify(vector3);
-		c_vv3json(argument);
-	}
-	console.timeEnd('Cvv3 JSON');
-
-	console.time('Cvv3');
-	
-	for(i=0;i<iterations;i++) {
-		var dataPtr = Module._malloc(12);
-		Module.setValue(dataPtr,vector3.x,'float');
-		Module.setValue(dataPtr+4,vector3.y,'float');
-		Module.setValue(dataPtr+8,vector3.z,'float');
-		c_vv3(dataPtr);
-		Module._free(dataPtr);
-	}
-	console.timeEnd('Cvv3');
 }

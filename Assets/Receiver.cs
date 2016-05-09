@@ -11,10 +11,22 @@ public class Receiver : MonoBehaviour {
 	delegate void delegate_Vf(float f);
 	delegate void delegate_Vs(string s);
 	delegate void delegate_Vv3(Vector3 a);
+	delegate void delegate_Vx(int a, int b, Vector3 c, Vector3 d);
 
 	delegate int delegate_I();
 	delegate float delegate_F();
 	delegate string delegate_S();
+
+	struct combinedArgs {
+		public int a;
+		public int b;
+		public Vector3 c;
+		public Vector3 d;
+
+		public override string ToString() {
+			return string.Format ("{0} {1} {2} {3}", a, b, c, d);
+		}
+	}
 
 	// Use this for initialization
 	void Awake () {
@@ -25,6 +37,8 @@ public class Receiver : MonoBehaviour {
 			TargetVs,
 			TargetVv3,
 			TargetVv3Json,
+			TargetVx,
+			TargetVxJson,
 			TargetI,
 			TargetF,
 			TargetS
@@ -46,6 +60,14 @@ public class Receiver : MonoBehaviour {
 
 	private void TargetVsWrapper(string a) {
 		TargetVs (a);
+	}
+
+	private void TargetVv3Wrapper(string json) {
+		TargetVv3Json (json);
+	}
+
+	private void TargetVxWrapper(string json) {
+		TargetVxJson (json);
 	}
 #endregion
 
@@ -92,6 +114,22 @@ public class Receiver : MonoBehaviour {
 		#endif
 	}
 
+
+	[MonoPInvokeCallback (typeof (delegate_Vx))]
+	private static void TargetVx(int a, int b, Vector3 c, Vector3 d) {
+		#if VERBOSE
+		Debug.Log (string.Format("{0} {1} {2} {3}",a,b,c,d));
+		#endif
+	}
+
+	[MonoPInvokeCallback (typeof (delegate_Vs))]
+	private static void TargetVxJson(string json) {
+		combinedArgs args = JsonUtility.FromJson<combinedArgs> (json);
+		#if VERBOSE
+		Debug.Log (args.ToString());
+		#endif
+	}
+
 	[MonoPInvokeCallback (typeof (delegate_I))]
 	private static int TargetI() {
 		return 42;
@@ -115,6 +153,8 @@ public class Receiver : MonoBehaviour {
 		delegate_Vs vs,
 		delegate_Vv3 vv3,
 		delegate_Vs vv3json,
+		delegate_Vx vx,
+		delegate_Vs vxjson,
 		delegate_I i,
 		delegate_F f,
 		delegate_S s

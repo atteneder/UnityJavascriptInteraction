@@ -22,9 +22,9 @@ var vector3 = {
 		z:3
 	}
 var vector3_2 = {
-		x:1,
-		y:2,
-		z:3
+		x:4,
+		y:5,
+		z:6
 	}
 
 function run_tests() {

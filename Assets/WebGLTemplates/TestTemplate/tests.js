@@ -4,6 +4,7 @@ Module.onRuntimeInitialized = function() {
 	c_vf = Module.cwrap('call_cb_vf',null,['number']);
 	c_vs = Module.cwrap('call_cb_vs',null,['string']);
 	c_vv3 = Module.cwrap('call_cb_vv3',null,['number']);
+	c_vv3json = Module.cwrap('call_cb_vv3json',null,['string']);
 	c_i = Module.cwrap('call_cb_i','number',[]);
 	c_f = Module.cwrap('call_cb_f','number',[]);
 	c_s = Module.cwrap('call_cb_s','string',[]);
@@ -142,14 +143,28 @@ function run_tests_direct_additional() {
 	}
 	console.timeEnd('Cs');
 
-	console.time('Cvv3');
-	var dataPtr = Module._malloc(12);
-	Module.setValue(dataPtr,1,'float');
-	Module.setValue(dataPtr+4,2,'float');
-	Module.setValue(dataPtr+8,3,'float');
-	for(i=0;i<iterations;i++) {
-		c_vv3(dataPtr);
+	var vector3 = {
+		x:1,
+		y:2,
+		z:3
 	}
-	Module._free(dataPtr);
+
+	console.time('Cvv3 JSON');
+	for(i=0;i<iterations;i++) {
+		var argument = JSON.stringify(vector3);
+		c_vv3json(argument);
+	}
+	console.timeEnd('Cvv3 JSON');
+
+	console.time('Cvv3');
+	
+	for(i=0;i<iterations;i++) {
+		var dataPtr = Module._malloc(12);
+		Module.setValue(dataPtr,vector3.x,'float');
+		Module.setValue(dataPtr+4,vector3.y,'float');
+		Module.setValue(dataPtr+8,vector3.z,'float');
+		c_vv3(dataPtr);
+		Module._free(dataPtr);
+	}
 	console.timeEnd('Cvv3');
 }

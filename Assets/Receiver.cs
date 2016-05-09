@@ -24,6 +24,7 @@ public class Receiver : MonoBehaviour {
 			TargetVf,
 			TargetVs,
 			TargetVv3,
+			TargetVv3Json,
 			TargetI,
 			TargetF,
 			TargetS
@@ -83,6 +84,14 @@ public class Receiver : MonoBehaviour {
 		#endif
 	}
 
+	[MonoPInvokeCallback (typeof (delegate_Vs))]
+	private static void TargetVv3Json(string json) {
+		Vector3 a = JsonUtility.FromJson<Vector3> (json);
+		#if VERBOSE
+		Debug.Log (string.Format("Vv3Json: {0}",a));
+		#endif
+	}
+
 	[MonoPInvokeCallback (typeof (delegate_I))]
 	private static int TargetI() {
 		return 42;
@@ -105,6 +114,7 @@ public class Receiver : MonoBehaviour {
 		delegate_Vf vf,
 		delegate_Vs vs,
 		delegate_Vv3 vv3,
+		delegate_Vs vv3json,
 		delegate_I i,
 		delegate_F f,
 		delegate_S s

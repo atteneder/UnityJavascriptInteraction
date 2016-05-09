@@ -9,6 +9,7 @@ callback_vi cb_vi;
 callback_vf cb_vf;
 callback_vs cb_vs;
 callback_vv3 cb_vv3;
+callback_vs cb_vv3json;
 
 callback_I cb_i;
 callback_F cb_f;
@@ -20,6 +21,7 @@ void set_callbacks(
 	callback_vf p_vf,
 	callback_vs p_vs,
 	callback_vv3 p_vv3,
+	callback_vs p_vv3json,
 	callback_I p_i,
 	callback_F p_f,
 	callback_S p_s
@@ -30,6 +32,7 @@ void set_callbacks(
 	cb_vf = p_vf;
 	cb_vs = p_vs;
 	cb_vv3 = p_vv3;
+	cb_vv3json = p_vv3json;
 	cb_i = p_i;
 	cb_f = p_f;
 	cb_s = p_s;
@@ -53,6 +56,10 @@ void EMSCRIPTEN_KEEPALIVE call_cb_vs(const char *a) {
 
 void EMSCRIPTEN_KEEPALIVE call_cb_vv3(struct Vector3 a) {
 	cb_vv3(a);
+}
+
+void EMSCRIPTEN_KEEPALIVE call_cb_vv3json(const char *a) {
+	cb_vv3json(a);
 }
 
 int32_t EMSCRIPTEN_KEEPALIVE call_cb_i() {

@@ -1,3 +1,7 @@
+if(!window.Module) {
+    window.Module = gameInstance.Module;
+}
+
 Module.onRuntimeInitialized = function() {
 	c_v = Module.cwrap('call_cb_v',null,[]);
 	c_vi = Module.cwrap('call_cb_vi',null,['number']);
@@ -28,6 +32,9 @@ var vector3_2 = {
 	}
 
 function run_tests() {
+
+	window.SendMessage = Module.SendMessage;
+	
 	console.log('Running tests via original SendMessage');
 	run_tests_sendmessage();
 

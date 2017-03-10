@@ -43,6 +43,8 @@ public class Receiver : MonoBehaviour {
 			TargetF,
 			TargetS
 		);
+
+		StartTests ();
 	}
 
 #region SENDMESSAGE_WRAPPERS
@@ -144,6 +146,9 @@ public class Receiver : MonoBehaviour {
 	private static string TargetS() {
 		return "This is a return string.";
 	}
+
+	[DllImport("__Internal")]
+	private static extern void StartTests();
 
 	[DllImport("__Internal")]
 	private static extern void set_callbacks(

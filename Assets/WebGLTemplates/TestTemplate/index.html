@@ -1,17 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-us">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | %UNITY_WEB_NAME%</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
     <script src="progress.js"></script>
-    <style>
-    /* a style sheet needs to be present for cursor hiding and custom cursors to work. */
-    </style>
-  </head>
-  <body>
-    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" height="%UNITY_HEIGHT%px" width="%UNITY_WIDTH%px"></canvas>
-    %UNITY_WEBGL_LOADER_GLUE%
+    <script src="%UNITY_WEBGL_LOADER_URL%"></script>
+    <script>
+        var unityInstance = UnityLoader.instantiate("unityContainer", "%UNITY_WEBGL_BUILD_URL%", {onProgress: UnityProgress});
+    </script>
     <script src="tests.js"></script>
-  </body>
+</head>
+<body>
+<div class="webgl-content">
+    <div id="unityContainer" style="width: %UNITY_WIDTH%px; height: %UNITY_HEIGHT%px"></div>
+    <div class="footer">
+        <div class="webgl-logo"></div>
+        <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
+        <div class="title">%UNITY_WEB_NAME%</div>
+    </div>
+</div>
+</body>
 </html>

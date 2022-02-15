@@ -1,19 +1,17 @@
-if(!window.Module) {
-    window.Module = gameInstance.Module;
-}
 
-Module.onRuntimeInitialized = function() {
-	c_v = Module.cwrap('call_cb_v',null,[]);
-	c_vi = Module.cwrap('call_cb_vi',null,['number']);
-	c_vf = Module.cwrap('call_cb_vf',null,['number']);
-	c_vs = Module.cwrap('call_cb_vs',null,['string']);
-	c_vv3 = Module.cwrap('call_cb_vv3',null,['number']);
-	c_vv3json = Module.cwrap('call_cb_vv3json',null,['string']);
-	c_vx = Module.cwrap('call_cb_vx',null,['number','number','number','number']);
-	c_vxjson = Module.cwrap('call_cb_vxjson',null,['string']);
-	c_i = Module.cwrap('call_cb_i','number',[]);
-	c_f = Module.cwrap('call_cb_f','number',[]);
-	c_s = Module.cwrap('call_cb_s','string',[]);
+function init_functions(unityInstance) {
+	window.Module = unityInstance.Module;
+	c_v = unityInstance.Module.cwrap('call_cb_v',null,[]);
+	c_vi = unityInstance.Module.cwrap('call_cb_vi',null,['number']);
+	c_vf = unityInstance.Module.cwrap('call_cb_vf',null,['number']);
+	c_vs = unityInstance.Module.cwrap('call_cb_vs',null,['string']);
+	c_vv3 = unityInstance.Module.cwrap('call_cb_vv3',null,['number']);
+	c_vv3json = unityInstance.Module.cwrap('call_cb_vv3json',null,['string']);
+	c_vx = unityInstance.Module.cwrap('call_cb_vx',null,['number','number','number','number']);
+	c_vxjson = unityInstance.Module.cwrap('call_cb_vxjson',null,['string']);
+	c_i = unityInstance.Module.cwrap('call_cb_i','number',[]);
+	c_f = unityInstance.Module.cwrap('call_cb_f','number',[]);
+	c_s = unityInstance.Module.cwrap('call_cb_s','string',[]);
 };
 
 var iterations = 1000;
@@ -174,9 +172,10 @@ function run_tests_direct() {
 	
 	for(i=0;i<iterations;i++) {
 		var dataPtr = Module._malloc(12);
-		Module.setValue(dataPtr,vector3.x,'float');
-		Module.setValue(dataPtr+4,vector3.y,'float');
-		Module.setValue(dataPtr+8,vector3.z,'float');
+		var fDataPtr = dataPtr>>2;
+		Module.HEAPF32[fDataPtr] = vector3.x;
+		Module.HEAPF32[fDataPtr+1] = vector3.y;
+		Module.HEAPF32[fDataPtr+2] = vector3.z;
 		c_vv3(dataPtr);
 		Module._free(dataPtr);
 	}
@@ -200,13 +199,14 @@ function run_tests_direct() {
 	console.time('Cvx');
 	for(i=0;i<iterations;i++) {
 		var dataPtr = Module._malloc(24);
-		Module.setValue(dataPtr,vector3.x,'float');
-		Module.setValue(dataPtr+4,vector3.y,'float');
-		Module.setValue(dataPtr+8,vector3.z,'float');
+		var fDataPtr = dataPtr>>2;
+		Module.HEAPF32[fDataPtr] = vector3.x;
+		Module.HEAPF32[fDataPtr+1] = vector3.y;
+		Module.HEAPF32[fDataPtr+2] = vector3.z;
 		
-		Module.setValue(dataPtr+12,vector3_2.x,'float');
-		Module.setValue(dataPtr+16,vector3_2.y,'float');
-		Module.setValue(dataPtr+20,vector3_2.z,'float');
+		Module.HEAPF32[fDataPtr+3] = vector3_2.x;
+		Module.HEAPF32[fDataPtr+4] = vector3_2.y;
+		Module.HEAPF32[fDataPtr+5] = vector3_2.z;
 
 		c_vx(int1,int2,dataPtr,dataPtr+12);
 

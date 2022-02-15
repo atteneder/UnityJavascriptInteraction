@@ -28,8 +28,7 @@ public class Receiver : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
-	void Awake () {
+	void Start () {
 		set_callbacks (
 			TargetV,
 			TargetVi,

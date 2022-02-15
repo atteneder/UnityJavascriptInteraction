@@ -18,3 +18,5 @@ Like this demo? You can show your appreciation and ...
 ## Discussion
 
 [Original post in the Unity forums](http://forum.unity3d.com/threads/super-fast-javascript-interaction-on-webgl.382734/)
+
+[kofi]: https://ko-fi.com/C0C3BW7G

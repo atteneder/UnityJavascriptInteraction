@@ -14,7 +14,7 @@ function init_functions(unityInstance) {
 	c_s = unityInstance.Module.cwrap('call_cb_s','string',[]);
 };
 
-var iterations = 1000;
+var iterations = 10000;
 
 var int1 = 100;
 var int2 = 200;

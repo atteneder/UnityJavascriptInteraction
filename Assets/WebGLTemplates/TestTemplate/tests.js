@@ -107,7 +107,7 @@ function run_tests_sendmessage() {
 	console.time('SMvv3');
 	for(i=0;i<iterations;i++) {
 		var argument = JSON.stringify(vector3);
-		SendMessage('Receiver','TargetVsWrapper',argument);
+		SendMessage('Receiver','TargetVv3Wrapper',argument);
 	}
 	console.timeEnd('SMvv3');
 
